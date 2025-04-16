@@ -11,7 +11,7 @@
 # production
 /build
 
-.NOTES.md
+NOTES.md
 
 # misc
 .DS_Store
