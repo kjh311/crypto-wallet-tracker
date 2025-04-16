@@ -30,7 +30,18 @@ mongoose_1.default
     .connect(mongoUri)
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error("MongoDB connection error:", err));
-app.post("/api/wallets", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// Define the route handlers as a function type
+const getWalletsHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const wallets = yield Wallet_1.default.find();
+        res.status(200).json(wallets);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch wallets' });
+    }
+});
+const postWalletsHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { address, userId } = req.body;
     try {
         const newWallet = new Wallet_1.default({ address, userId });
@@ -41,12 +52,27 @@ app.post("/api/wallets", (req, res) => __awaiter(void 0, void 0, void 0, functio
         console.error(err);
         res.status(500).json({ error: "Failed to save wallet" });
     }
-}));
-app.get("/", (req, res) => {
+});
+const deleteWalletsHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const deletedWallet = yield Wallet_1.default.findByIdAndDelete(id);
+        if (!deletedWallet) {
+            res.status(404).json({ error: 'Wallet not found' });
+            return; // End the function after sending the response
+        }
+        res.status(200).json({ message: 'Wallet deleted successfully' });
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to delete wallet' });
+    }
+});
+// Attach handlers to the routes
+app.get('/api/wallets', getWalletsHandler);
+app.post('/api/wallets', postWalletsHandler);
+app.delete('/api/wallets/:id', deleteWalletsHandler);
+app.get('/', (req, res) => {
     res.send("API is running");
 });
-// Example GET route
-// app.get('/api/hello', (req, res) => {
-//     res.json({ message: 'Hello from the backend!' });
-//   });
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

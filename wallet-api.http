@@ -1,0 +1,18 @@
+### Test wallet POST
+POST http://localhost:5000/api/wallets
+Content-Type: application/json
+
+{
+  "address": "0xabc123456788",
+  "userId": "661eb2f0d4e35f2746e7a5c8"
+}
+
+###
+
+GET http://localhost:5000/api/wallets
+
+
+### DELETE Wallet by ID
+DELETE http://localhost:5000/api/wallets/67fffc8c1f05c3098fbc91d6 HTTP/1.1
+Content-Type: application/json
+
