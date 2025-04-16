@@ -21,4 +21,9 @@ app.get("/", (req, res) => {
   res.send("API is running");
 });
 
+// Example GET route
+app.get('/api/hello', (req, res) => {
+    res.json({ message: 'Hello from the backend!' });
+  });
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
