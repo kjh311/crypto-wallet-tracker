@@ -3,7 +3,6 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
-import Hello from './pages/Hello';
 import NavBar from './pages/NavBar';
 import AllWallets from './pages/AllWallets';
 
@@ -16,7 +15,6 @@ function App() {
     <Routes>
     
       <Route path="/" element={<Home />} />
-      <Route path="/hello" element={<Hello />} />
       <Route path="/wallets" element={<AllWallets />} />
 
     </Routes>

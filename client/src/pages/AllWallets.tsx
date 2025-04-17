@@ -1,34 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 type Wallet = {
-  id: string;
+  _id: string;
   address: string;
-  // Add more fields here if your wallet object includes them
+  userId?: string;
+  createdAt: string;
 };
 
 const AllWallets: React.FC = () => {
   const [wallets, setWallets] = useState<Wallet[]>([]);
+  const [message, setMessage] = useState('');
+
+  const fetchWallets = async () => {
+    try {
+      const response = await axios.get<Wallet[]>('http://localhost:5000/api/wallets');
+      setWallets(response.data);
+    } catch (error) {
+      console.error('Error fetching wallets:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchWallets = async () => {
-      try {
-        const response = await axios.get<Wallet[]>('http://localhost:5000/api/wallets');
-        setWallets(response.data);
-      } catch (error) {
-        console.error('Error fetching wallets', error);
-      }
-    };
-
     fetchWallets();
   }, []);
 
+  const deleteWallet = async (id: string) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/wallets/${id}`);
+      setWallets(wallets.filter(wallet => wallet._id !== id));
+      setMessage(`Wallet ${id} deleted.`);
+    } catch (error) {
+      console.error('Error deleting wallet:', error);
+      setMessage('Error deleting wallet.');
+    }
+  };
+
   return (
     <div>
-      <h1>All Wallets</h1>
+      <h2>All Wallets</h2>
+      {message && <p>{message}</p>}
       <ul>
-        {wallets.map((wallet) => (
-          <li key={wallet.id}>{wallet.address}</li>
+        {wallets.map(wallet => (
+          <li key={wallet._id}>
+            <p>{wallet.address}</p>
+            <p>{wallet._id}</p>
+            <p>{wallet.createdAt}</p>
+            <button onClick={() => deleteWallet(wallet._id)}>Delete</button>
+          </li>
         ))}
       </ul>
     </div>
